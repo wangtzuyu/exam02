@@ -61,7 +61,7 @@ ax[0].set_ylabel('ACC Vector')
 ax[1].stem(t,tilt)
 ax[1].set_xlabel('Time')
 
-ax[1].set_ylabel('Tilt')
+ax[1].set_ylabel('>5 cm or not')
 
 plt.show()
 

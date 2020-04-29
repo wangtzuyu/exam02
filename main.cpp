@@ -18,8 +18,6 @@ void print_toggle_led() {
   printf("Toggle LED!\r\n");
 }
 
-
-
 void btn_fall_irq() {
   //led1 = !led1;
    //printf("0");
@@ -75,6 +73,9 @@ void acc(){
    FXOS8700CQ_readRegs(FXOS8700Q_WHOAMI, &who_am_i, 1);
    //pc.printf("Here is %x\r\n", who_am_i);
    float time=0.0;
+   float disX=0.0;//dispalcement in X axis
+   float disY=0.0;//displacement in Y axis
+   float displacement=0.0;//total displacement in XY-plane
    while (true) {
       FXOS8700CQ_readRegs(FXOS8700Q_OUT_X_MSB, res, 6);
       acc16 = (res[0] << 6) | (res[1] >> 2);
@@ -95,13 +96,16 @@ void acc(){
          printf("%1.4f\r\n",t[1]);
          printf("%1.4f\r\n",t[2]);
          
-         float tilt;
-         float SQRTxxyy= sqrt(t[0]*t[0]+t[1]*t[1]) ;
-         if(atan(t[2]/SQRTxxyy)>(3.1415/4)){
-            tilt=0;
+         float tilt;//if >5cm, means true and tilt=1 
+         disX=disX+9.8*0.5*t[0]*0.1*0.1;//x=x_0+9.8*0.5*a_x*t^2;
+         disY=disY+9.8*0.5*t[1]*0.1*0.1;//y=y_0+9.8*0.5*a_y*t^2;
+         //displacement=0.5*a*time*time;
+         displacement=sqrt(disX*disX+disY*disY);
+         if(displacement>5){
+            tilt=1;//displacement > 5
          }
          else{
-            tilt=1;
+            tilt=0;//displacement <=5
          }
       printf("%1.2f\r\n",tilt);      
       //printf("%1.2f\n",time);
